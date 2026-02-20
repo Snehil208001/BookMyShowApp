@@ -131,12 +131,10 @@ func AddMoviesInVenue(c *gin.Context) {
 func GetVenueByID(c *gin.Context) {
 	venueID := c.Param("id")
 	var venue models.Venue
-	// Use GORM to preload the Movies relationship while fetching the venue by ID
-	if err := initializers.Db.Preload("Movies").First(&venue, venueID).Error; err != nil {
+	if err := initializers.Db.Preload("Movies").Preload("ShowTimes").Preload("ShowTimes.Movie").First(&venue, venueID).Error; err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"error": "Venue not found"})
 		return
 	}
-	// Respond with the venue and its associated movies
 	c.JSON(http.StatusOK, gin.H{
 		"venue": venue,
 	})

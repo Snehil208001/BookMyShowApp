@@ -13,6 +13,7 @@ func MovieRoutes(c *gin.Engine) {
 		Movie.POST("/", middleware.RequireAuth, controllers.CreateMovie)
 		Movie.GET("/:id", controllers.GetMovieByID)
 		Movie.GET("/venues/:id", controllers.GetVenuesByMovieID)
+		Movie.PATCH("/:id/poster", middleware.RequireAuth, controllers.UpdateMoviePoster)
 		Movie.POST("/upload/poster/:id", middleware.RequireAuth, controllers.UploadMoviePoster)
 	}
 }

@@ -55,8 +55,12 @@ func CreateSeatMatrix(seats []models.Seat) map[string][]map[string]interface{} {
 	seatMatrix := make(map[string][]map[string]interface{})
 
 	for _, seat := range seats {
+		if seat.SeatNumber == "" {
+			continue // Skip invalid seats to avoid panic
+		}
 		row := string(seat.SeatNumber[0]) // Assume the first character represents the row
 		seatData := map[string]interface{}{
+			"id":           seat.ID,
 			"seat_number":  seat.SeatNumber,
 			"is_reserved":  seat.IsReserved,
 			"is_booked":    seat.IsBooked,
@@ -97,6 +101,8 @@ func UnReserveSeats(seatIDs []uint, duration time.Duration) {
 		if seat.IsReserved && !seat.IsBooked {
 			seat.IsReserved = false
 			seat.IsAvailable = true
+			seat.ReservedByUserID = nil
+			seat.ReservedAt = nil
 			tx.Save(&seat)
 		}
 	}
@@ -163,17 +169,20 @@ func SaveFile(fileReader io.Reader, fileHeader *multipart.FileHeader) (string, e
 
 	bucketName := os.Getenv("AWS_BUCKET_NAME")
 
+	// Use unique key to avoid overwriting files with same name
+	uniqueKey := fmt.Sprintf("%d_%s", time.Now().UnixNano(), fileHeader.Filename)
+
 	_, err := initializers.Uploader.Upload(&s3manager.UploadInput{
 		Bucket: aws.String(bucketName),
-		Key:    aws.String(fileHeader.Filename),
+		Key:    aws.String(uniqueKey),
 		Body:   fileReader,
 	})
 	if err != nil {
 		return "", err
 	}
 
-	// Get the URL of the uploaded file
-	url := fmt.Sprintf("https://%s.s3.amazonaws.com/%s", bucketName, fileHeader.Filename)
+	// Get the URL of the uploaded file (key may need encoding for special chars)
+	url := fmt.Sprintf("https://%s.s3.amazonaws.com/%s", bucketName, uniqueKey)
 
 	return url, nil
 }

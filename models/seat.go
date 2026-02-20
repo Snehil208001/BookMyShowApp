@@ -1,6 +1,10 @@
 package models
 
-import "gorm.io/gorm"
+import (
+	"time"
+
+	"gorm.io/gorm"
+)
 
 type Seat struct {
 	gorm.Model
@@ -10,6 +14,10 @@ type Seat struct {
 	IsBooked    bool    `json:"isBooked"`
 	IsAvailable bool    `json:"isAvailable"`
 	Price       float32 `json:"price"`
+
+	// Reservation ownership - only the user who reserved can book
+	ReservedByUserID *uint      `json:"-" gorm:"index"`
+	ReservedAt       *time.Time `json:"-"`
 
 	//One seat belongs to one showtime
 	ShowTimeID uint     `json:"showtime_id"`

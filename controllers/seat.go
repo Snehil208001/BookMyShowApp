@@ -13,23 +13,38 @@ import (
 
 func GetSeatLayout(c *gin.Context) {
 	showtimeID := c.Param("id")
-	// Fetch the showtime to ensure it exists
+	// Fetch the showtime with venue and movie
 	var showTime models.ShowTime
-	if err := initializers.Db.Preload("Seats").First(&showTime, showtimeID).Error; err != nil {
+	if err := initializers.Db.Preload("Seats").Preload("Venue").Preload("Movie").First(&showTime, showtimeID).Error; err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"error": "ShowTime not found"})
 		return
 	}
 	// If seats are fetched successfully, convert to a matrix format based on row and seat number
 	seatMatrix := helpers.CreateSeatMatrix(showTime.Seats)
 
+	venueName := ""
+	movieName := ""
+	if showTime.Venue.ID != 0 {
+		venueName = showTime.Venue.Name + " - " + showTime.Venue.Location
+	}
+	if showTime.Movie.ID != 0 {
+		movieName = showTime.Movie.Title
+	}
+
 	c.JSON(http.StatusOK, gin.H{
-		"showtime": showTime.Timing,
-		"venue":    showTime.VenueID,
-		"seats":    seatMatrix,
+		"showtime":   showTime.Timing,
+		"venue":      showTime.VenueID,
+		"venue_name": venueName,
+		"movie_name": movieName,
+		"seats":      seatMatrix,
 	})
 }
 
 func ReserveSeats(c *gin.Context) {
+	user, _ := c.Get("user")
+	userDetails := user.(models.User)
+	userID := userDetails.ID
+
 	var request struct {
 		ShowID uint   `json:"show_id"`
 		Seats  []uint `json:"seat_ids"`
@@ -52,6 +67,8 @@ func ReserveSeats(c *gin.Context) {
 	// Start a GORM transaction
 	tx := initializers.Db.Begin()
 
+	reservedAt := time.Now()
+
 	// Reserve seats
 	for _, seatID := range request.Seats {
 		var seat models.Seat
@@ -70,9 +87,11 @@ func ReserveSeats(c *gin.Context) {
 			return
 		}
 
-		// Reserve the seat
+		// Reserve the seat and link to current user
 		seat.IsReserved = true
 		seat.IsAvailable = false
+		seat.ReservedByUserID = &userID
+		seat.ReservedAt = &reservedAt
 		if err := tx.Save(&seat).Error; err != nil {
 			tx.Rollback()
 			c.JSON(http.StatusInternalServerError, gin.H{"error": "Unable to reserve seat"})
@@ -83,10 +102,10 @@ func ReserveSeats(c *gin.Context) {
 	// Commit the transaction
 	tx.Commit()
 
-	// Schedule a job to unreserve the seats after 5 minutes
-	go helpers.UnReserveSeats(request.Seats, 5*time.Minute)
+	// Schedule a job to unreserve the seats after 10 minutes (per README)
+	go helpers.UnReserveSeats(request.Seats, 10*time.Minute)
 
-	c.JSON(http.StatusOK, gin.H{"message": "Seats reserved successfully for 5 minutes"})
+	c.JSON(http.StatusOK, gin.H{"message": "Seats reserved successfully for 10 minutes"})
 }
 
 // BookSeats function to book reserved seats
@@ -137,6 +156,13 @@ func BookSeats(c *gin.Context) {
 		if !seat.IsReserved || seat.IsBooked {
 			tx.Rollback()
 			c.JSON(http.StatusConflict, gin.H{"error": "Seat is not reserved or reservation expired"})
+			return
+		}
+
+		// Only the user who reserved can book
+		if seat.ReservedByUserID == nil || *seat.ReservedByUserID != userId {
+			tx.Rollback()
+			c.JSON(http.StatusForbidden, gin.H{"error": "You can only book seats you reserved"})
 			return
 		}
 

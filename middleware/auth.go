@@ -13,11 +13,18 @@ import (
 )
 
 func RequireAuth(c *gin.Context) {
+	tokenString, _ := c.Cookie("Authorization")
 
-	tokenString, err := c.Cookie("Authorization")
+	// Fallback: check Authorization header (Bearer token) for mobile apps
+	if tokenString == "" {
+		authHeader := c.GetHeader("Authorization")
+		if len(authHeader) > 7 && authHeader[:7] == "Bearer " {
+			tokenString = authHeader[7:]
+		}
+	}
 
-	if err != nil {
-		c.JSON(http.StatusUnauthorized, gin.H{"error": "Authorization cookie not found"})
+	if tokenString == "" {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "Authorization required"})
 		c.Abort()
 		return
 	}

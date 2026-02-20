@@ -65,6 +65,7 @@ type MovieRequestBody struct {
 	Title       string `json:"title" validate:"required,min=2,max=50"`
 	Description string `json:"desc" validate:"required"`
 	Duration    string `json:"duration" validate:"required"`
+	Poster      string `json:"poster"`
 }
 
 func CreateMovie(c *gin.Context) {
@@ -89,6 +90,7 @@ func CreateMovie(c *gin.Context) {
 		Title:       body.Title,
 		Description: body.Description,
 		Duration:    body.Duration,
+		Poster:      body.Poster,
 	}
 	result := initializers.Db.Create(&movie)
 	if result.Error != nil {
@@ -102,17 +104,44 @@ func CreateMovie(c *gin.Context) {
 
 func GetMovieByID(c *gin.Context) {
 	movieID := c.Param("id")
-	// Declare a variable to hold the movie data
 	var movie models.Movie
-	// Retrieve the movie with its associated venues using GORM's Preload
 	if err := initializers.Db.Preload("Venues").First(&movie, movieID).Error; err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"error": "Movie not found"})
 		return
 	}
-	// Return the movie along with its venues
 	c.JSON(http.StatusOK, gin.H{
 		"movie": movie,
 	})
+}
+
+type UpdateMovieBody struct {
+	Poster string `json:"poster"`
+}
+
+func UpdateMoviePoster(c *gin.Context) {
+	user, _ := c.Get("user")
+	userDetails := user.(models.User)
+	if !userDetails.IsAdmin {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "Unauthorized, admin access required"})
+		return
+	}
+	movieID := c.Param("id")
+	var body UpdateMovieBody
+	if err := c.BindJSON(&body); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid input"})
+		return
+	}
+	var movie models.Movie
+	if err := initializers.Db.First(&movie, movieID).Error; err != nil {
+		c.JSON(http.StatusNotFound, gin.H{"error": "Movie not found"})
+		return
+	}
+	movie.Poster = body.Poster
+	if err := initializers.Db.Save(&movie).Error; err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to update poster"})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{"movie": movie})
 }
 
 type VenueWithShowTimes struct {
@@ -134,18 +163,20 @@ func GetVenuesByMovieID(c *gin.Context) {
 	venueMap := make(map[uint]gin.H)
 	for _, showTime := range showTimes {
 		venueID := showTime.Venue.ID
-		// Check if the venue is already added to the map
+		showTimeObj := gin.H{"id": showTime.ID, "timing": showTime.Timing}
 		if venue, exists := venueMap[venueID]; exists {
-			// If venue already exists, append the new show time
-			venue["show_times"] = append(venue["show_times"].([]string), showTime.Timing)
+			existingTimes, ok := venue["show_times"].([]gin.H)
+			if !ok {
+				existingTimes = []gin.H{}
+			}
+			venue["show_times"] = append(existingTimes, showTimeObj)
 		} else {
-			// If venue doesn't exist, add it to the map with the first show time
 			venueMap[venueID] = gin.H{
 				"id":         showTime.Venue.ID,
 				"name":       showTime.Venue.Name,
 				"location":   showTime.Venue.Location,
 				"movie_name": showTime.Movie.Title,
-				"show_times": []string{showTime.Timing},
+				"show_times": []gin.H{showTimeObj},
 			}
 		}
 	}

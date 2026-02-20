@@ -1,0 +1,251 @@
+.movie-detail {
+  animation: fadeIn 0.4s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.movie-detail-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 50vh;
+  gap: 1.25rem;
+  color: var(--text-muted);
+}
+
+.movie-detail-loading .loading-spinner {
+  width: 48px;
+  height: 48px;
+  border: 3px solid var(--border);
+  border-top-color: var(--accent);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 2rem;
+  color: var(--text-muted);
+  font-weight: 500;
+  padding: 0.5rem 0;
+  transition: all var(--transition-fast);
+}
+
+.back-link:hover {
+  color: var(--accent);
+}
+
+.back-arrow {
+  font-size: 1.1rem;
+}
+
+.movie-header {
+  display: flex;
+  gap: 2.5rem;
+  margin-bottom: 3rem;
+  padding-bottom: 2.5rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.movie-poster-large {
+  flex-shrink: 0;
+  width: 220px;
+  aspect-ratio: 2/3;
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+  background: var(--bg-hover);
+  position: relative;
+  box-shadow: var(--shadow-card);
+}
+
+.movie-poster-large img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.poster-glow {
+  position: absolute;
+  inset: -2px;
+  background: linear-gradient(135deg, var(--accent), transparent);
+  opacity: 0.15;
+  border-radius: inherit;
+  pointer-events: none;
+}
+
+.poster-fallback {
+  position: absolute;
+  inset: 0;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  font-size: 4rem;
+  background: linear-gradient(135deg, var(--bg-hover) 0%, var(--bg-card) 100%);
+}
+
+.poster-fallback.show {
+  display: flex;
+}
+
+.movie-meta {
+  flex: 1;
+  min-width: 0;
+}
+
+.meta-badge {
+  display: inline-block;
+  padding: 0.35rem 0.9rem;
+  background: var(--accent-soft);
+  color: var(--accent);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  border-radius: 50px;
+  margin-bottom: 1rem;
+}
+
+.movie-meta h1 {
+  font-size: 2.25rem;
+  margin-bottom: 0.75rem;
+}
+
+.movie-meta .duration {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--text-muted);
+  margin-bottom: 1.25rem;
+  font-size: 1rem;
+}
+
+.duration-icon {
+  font-size: 1rem;
+}
+
+.movie-meta .description {
+  font-size: 1rem;
+  line-height: 1.75;
+  color: var(--text-muted);
+  max-width: 540px;
+}
+
+.venues-section h2 {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 1.5rem;
+  margin-bottom: 1.75rem;
+}
+
+.section-icon {
+  font-size: 1.25rem;
+}
+
+.venues-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.venue-card {
+  background: var(--bg-card);
+  border-radius: var(--radius-lg);
+  padding: 1.75rem 2rem;
+  border: 1px solid var(--border);
+  transition: all var(--transition);
+}
+
+.venue-card:hover {
+  border-color: var(--border-light);
+  box-shadow: var(--shadow-card);
+  transform: translateX(4px);
+}
+
+.venue-info h3 {
+  font-size: 1.35rem;
+  margin-bottom: 0.35rem;
+}
+
+.venue-info .location {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  color: var(--text-muted);
+  font-size: 0.95rem;
+  margin-bottom: 0.5rem;
+}
+
+.venue-info .movie-name {
+  font-size: 0.9rem;
+  color: var(--accent);
+  margin-bottom: 1.25rem;
+}
+
+.showtimes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+}
+
+.showtime-btn {
+  padding: 0.7rem 1.4rem;
+  background: var(--bg-hover);
+  color: var(--text);
+  border-radius: var(--radius-md);
+  font-weight: 600;
+  font-size: 0.95rem;
+  border: 1px solid var(--border);
+  transition: all var(--transition-fast);
+}
+
+.showtime-btn:hover {
+  background: var(--accent);
+  color: white;
+  border-color: var(--accent);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 16px var(--accent-glow);
+}
+
+.empty-state-detail {
+  text-align: center;
+  padding: 4rem 2rem;
+}
+
+.empty-state-detail .empty-icon {
+  font-size: 4rem;
+  display: block;
+  margin-bottom: 1rem;
+  opacity: 0.6;
+}
+
+.empty-state-detail p {
+  color: var(--text-muted);
+  margin-bottom: 1.5rem;
+}
+
+@media (max-width: 640px) {
+  .movie-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1.5rem;
+  }
+
+  .movie-poster-large {
+    width: 180px;
+  }
+
+  .movie-meta h1 {
+    font-size: 1.75rem;
+  }
+}
