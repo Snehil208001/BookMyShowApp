@@ -8,8 +8,8 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"
 	"github.com/golang-jwt/jwt/v5"
-	"github.com/raunak173/bms-go/initializers"
-	"github.com/raunak173/bms-go/models"
+	"github.com/Snehil208001/BookMyShowApp/initializers"
+	"github.com/Snehil208001/BookMyShowApp/models"
 	"golang.org/x/crypto/bcrypt"
 )
 

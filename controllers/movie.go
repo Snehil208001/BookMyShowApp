@@ -5,9 +5,9 @@ import (
 	"strconv"
 
 	"github.com/gin-gonic/gin"
-	"github.com/raunak173/bms-go/helpers"
-	"github.com/raunak173/bms-go/initializers"
-	"github.com/raunak173/bms-go/models"
+	"github.com/Snehil208001/BookMyShowApp/helpers"
+	"github.com/Snehil208001/BookMyShowApp/initializers"
+	"github.com/Snehil208001/BookMyShowApp/models"
 )
 
 func GetAllMovies(c *gin.Context) {

@@ -10,8 +10,8 @@ import (
 
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/service/s3/s3manager"
-	"github.com/raunak173/bms-go/initializers"
-	"github.com/raunak173/bms-go/models"
+	"github.com/Snehil208001/BookMyShowApp/initializers"
+	"github.com/Snehil208001/BookMyShowApp/models"
 	"github.com/twilio/twilio-go"
 	openapi "github.com/twilio/twilio-go/rest/verify/v2"
 )

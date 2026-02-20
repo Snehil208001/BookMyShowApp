@@ -1,4 +1,4 @@
-module github.com/raunak173/bms-go
+module github.com/Snehil208001/BookMyShowApp
 
 go 1.22.5
 

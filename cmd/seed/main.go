@@ -5,8 +5,8 @@ import (
 	"os"
 
 	"github.com/joho/godotenv"
-	"github.com/raunak173/bms-go/helpers"
-	"github.com/raunak173/bms-go/models"
+	"github.com/Snehil208001/BookMyShowApp/helpers"
+	"github.com/Snehil208001/BookMyShowApp/models"
 	"golang.org/x/crypto/bcrypt"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"

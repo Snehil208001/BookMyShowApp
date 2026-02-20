@@ -2,8 +2,8 @@ package main
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/raunak173/bms-go/initializers"
-	"github.com/raunak173/bms-go/routes"
+	"github.com/Snehil208001/BookMyShowApp/initializers"
+	"github.com/Snehil208001/BookMyShowApp/routes"
 )
 
 func init() {

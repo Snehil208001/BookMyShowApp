@@ -1,6 +1,6 @@
 package initializers
 
-import "github.com/raunak173/bms-go/models"
+import "github.com/Snehil208001/BookMyShowApp/models"
 
 func SyncDB() {
 	Db.AutoMigrate(

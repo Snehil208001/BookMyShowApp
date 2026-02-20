@@ -4,7 +4,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/raunak173/bms-go/models"
+	"github.com/Snehil208001/BookMyShowApp/models"
 )
 
 func TestGenerateSeatsForShowTime(t *testing.T) {
