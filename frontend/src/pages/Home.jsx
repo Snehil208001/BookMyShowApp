@@ -1,5 +1,7 @@
 import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
+import Tilt from 'react-parallax-tilt'
+import { Search, Film, AlertCircle, Clock, ChevronRight } from 'lucide-react'
 import { getMovies } from '../api'
 import './Home.css'
 
@@ -20,30 +22,46 @@ function MovieCard({ movie, index }) {
   const showPoster = movie.poster && !imgError
 
   return (
-    <Link
-      to={`/movie/${movie.ID ?? movie.id}`}
-      className="movie-card"
-      style={{ animationDelay: `${index * 0.05}s` }}
+    <Tilt
+      className="tilt-wrapper"
+      perspective={1000}
+      glareEnable={true}
+      glareMaxOpacity={0.3}
+      glareColor="#ffffff"
+      glarePosition="all"
+      scale={1.02}
+      transitionSpeed={1500}
+      tiltMaxAngleX={8}
+      tiltMaxAngleY={8}
     >
-      <div className="movie-poster">
-        {showPoster ? (
-          <img src={movie.poster} alt={movie.title} onError={() => setImgError(true)} />
-        ) : null}
-        <div className={`poster-placeholder ${!showPoster ? 'show' : ''}`}>
-          <span className="placeholder-icon">🎬</span>
+      <Link
+        to={`/movie/${movie.ID ?? movie.id}`}
+        className="movie-card"
+        style={{ animationDelay: `${index * 0.05}s` }}
+      >
+        <div className="movie-poster">
+          {showPoster ? (
+            <img src={movie.poster} alt={movie.title} onError={() => setImgError(true)} />
+          ) : null}
+          <div className={`poster-placeholder ${!showPoster ? 'show' : ''}`}>
+            <Film className="placeholder-icon" />
+          </div>
+          <div className="movie-overlay">
+            <span className="view-details">View Details</span>
+          </div>
+          {movie.duration && (
+            <span className="duration-badge">{movie.duration}</span>
+          )}
         </div>
-        <div className="movie-overlay">
-          <span className="view-details">View Details</span>
+        <div className="movie-info">
+          <h3>{movie.title}</h3>
+          <p className="duration">
+            <Clock size={14} style={{ marginRight: '4px' }} />
+            {movie.duration}
+          </p>
         </div>
-        {movie.duration && (
-          <span className="duration-badge">{movie.duration}</span>
-        )}
-      </div>
-      <div className="movie-info">
-        <h3>{movie.title}</h3>
-        <p className="duration">{movie.duration}</p>
-      </div>
-    </Link>
+      </Link>
+    </Tilt>
   )
 }
 
@@ -83,7 +101,7 @@ export default function Home() {
   if (error) {
     return (
       <div className="error-state">
-        <div className="error-icon">⚠️</div>
+        <AlertCircle className="error-icon" />
         <p>{error}</p>
         <p className="hint">Make sure the backend is running at http://localhost:8080</p>
       </div>
@@ -101,8 +119,8 @@ export default function Home() {
           <span className="hero-badge">Now in Theaters</span>
           <h1>Discover Your Next <span className="highlight">Movie</span> Experience</h1>
           <p>Browse the latest blockbusters and book your tickets in seconds</p>
-          <form onSubmit={handleSearch} className="search-form">
-            <span className="search-icon">🔍</span>
+          <form onSubmit={handleSearch} className="search-form glass-panel">
+            <Search className="search-icon" size={20} />
             <input
               type="text"
               placeholder="Search movies..."
@@ -143,7 +161,7 @@ export default function Home() {
         )}
         {!loading && movies.length === 0 && (
           <div className="empty-state">
-            <div className="empty-icon">🎭</div>
+            <Film className="empty-icon" size={48} />
             <p>No movies found</p>
             <span>Add some via the admin panel to get started</span>
           </div>

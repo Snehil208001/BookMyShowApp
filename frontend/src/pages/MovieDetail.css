@@ -3,8 +3,15 @@
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .movie-detail-loading {
@@ -27,7 +34,9 @@
 }
 
 @keyframes spin {
-  to { transform: rotate(360deg); }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 .back-link {
@@ -59,13 +68,14 @@
 
 .movie-poster-large {
   flex-shrink: 0;
-  width: 220px;
+  width: 260px;
   aspect-ratio: 2/3;
   border-radius: var(--radius-xl);
   overflow: hidden;
   background: var(--bg-hover);
   position: relative;
-  box-shadow: var(--shadow-card);
+  box-shadow: var(--shadow-3d);
+  transform: translateZ(40px);
 }
 
 .movie-poster-large img {
@@ -159,16 +169,18 @@
 }
 
 .venue-card {
-  background: var(--bg-card);
+  background: var(--bg-glass);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
   border-radius: var(--radius-lg);
   padding: 1.75rem 2rem;
-  border: 1px solid var(--border);
+  border: 1px solid var(--glass-border);
   transition: all var(--transition);
 }
 
 .venue-card:hover {
-  border-color: var(--border-light);
-  box-shadow: var(--shadow-card);
+  border-color: rgba(255, 255, 255, 0.15);
+  box-shadow: var(--shadow-hover);
   transform: translateX(4px);
 }
 

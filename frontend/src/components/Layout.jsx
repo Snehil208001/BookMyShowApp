@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { Outlet, Link, useNavigate } from 'react-router-dom'
+import { Clapperboard, Ticket, User, LogOut } from 'lucide-react'
 import { useAuth } from '../context/AuthContext'
 import { logout } from '../api'
 import './Layout.css'
@@ -24,7 +25,7 @@ export default function Layout() {
     <div className="layout">
       <header className="header">
         <Link to="/" className="logo" onClick={() => setMobileMenuOpen(false)}>
-          <span className="logo-icon">🎬</span>
+          <Clapperboard className="logo-icon" size={28} color="var(--accent)" />
           <span className="logo-text">BookMyShow</span>
         </Link>
 
@@ -41,20 +42,23 @@ export default function Layout() {
 
         <nav className={`nav ${mobileMenuOpen ? 'open' : ''}`}>
           <Link to="/" className="nav-link" onClick={() => setMobileMenuOpen(false)}>
-            <span className="nav-icon">🎬</span>
+            <Clapperboard className="nav-icon" />
             Movies
           </Link>
           {user ? (
             <>
               <Link to="/orders" className="nav-link" onClick={() => setMobileMenuOpen(false)}>
-                <span className="nav-icon">🎫</span>
+                <Ticket className="nav-icon" />
                 My Orders
               </Link>
               <div className="user-section">
-                <span className="user-avatar">{user.name?.charAt(0)?.toUpperCase() || 'U'}</span>
+                <span className="user-avatar">
+                  <User size={20} />
+                </span>
                 <span className="user-badge">{user.name}</span>
               </div>
               <button type="button" className="nav-logout" onClick={handleLogout}>
+                <LogOut size={16} style={{ marginRight: '6px' }} />
                 Logout
               </button>
             </>
@@ -78,7 +82,7 @@ export default function Layout() {
       <footer className="footer">
         <div className="footer-inner">
           <div className="footer-brand">
-            <span className="footer-logo">🎬</span>
+            <Clapperboard className="footer-logo" size={24} color="var(--accent)" />
             <span>BookMyShow</span>
           </div>
           <div className="footer-links">

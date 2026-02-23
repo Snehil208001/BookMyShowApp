@@ -1,5 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useParams, useNavigate, Link } from 'react-router-dom'
+import Tilt from 'react-parallax-tilt'
+import { ArrowLeft, Clock, MapPin, Film, AlertCircle } from 'lucide-react'
 import { getVenuesByMovie, getMovie } from '../api'
 import { useAuth } from '../context/AuthContext'
 import './MovieDetail.css'
@@ -48,13 +50,13 @@ export default function MovieDetail() {
       </div>
     )
   }
-  if (error) return <div className="error-state"><p>{error}</p></div>
+  if (error) return <div className="error-state"><AlertCircle size={48} /><p>{error}</p></div>
   if (venues.length === 0) {
     return (
       <div className="empty-state-detail">
-        <span className="empty-icon">🎬</span>
+        <Film className="empty-icon" size={48} style={{ margin: '0 auto 1rem' }} />
         <p>No showtimes available for this movie.</p>
-        <Link to="/" className="back-link">← Back to movies</Link>
+        <Link to="/" className="back-link"><ArrowLeft size={16} /> Back to movies</Link>
       </div>
     )
   }
@@ -62,27 +64,40 @@ export default function MovieDetail() {
   return (
     <div className="movie-detail">
       <Link to="/" className="back-link">
-        <span className="back-arrow">←</span>
+        <ArrowLeft size={18} />
         Back to movies
       </Link>
 
       {movie && (
         <div className="movie-header">
-          <div className="movie-poster-large">
-            {movie.poster && !posterError ? (
-              <img src={movie.poster} alt={movie.title} onError={() => setPosterError(true)} />
-            ) : null}
-            <div className={`poster-fallback ${!movie.poster || posterError ? 'show' : ''}`}>
-              <span>🎬</span>
+          <Tilt
+            className="tilt-wrapper"
+            perspective={1000}
+            glareEnable={true}
+            glareMaxOpacity={0.4}
+            glareColor="#ffffff"
+            glarePosition="all"
+            scale={1.05}
+            transitionSpeed={1500}
+            tiltMaxAngleX={10}
+            tiltMaxAngleY={10}
+          >
+            <div className="movie-poster-large">
+              {movie.poster && !posterError ? (
+                <img src={movie.poster} alt={movie.title} onError={() => setPosterError(true)} />
+              ) : null}
+              <div className={`poster-fallback ${!movie.poster || posterError ? 'show' : ''}`}>
+                <Film size={64} color="var(--text-muted)" />
+              </div>
+              <div className="poster-glow"></div>
             </div>
-            <div className="poster-glow"></div>
-          </div>
+          </Tilt>
           <div className="movie-meta">
             <span className="meta-badge">Now Showing</span>
             <h1>{movie.title}</h1>
             {movie.duration && (
               <p className="duration">
-                <span className="duration-icon">⏱</span>
+                <Clock className="duration-icon" size={16} />
                 {movie.duration}
               </p>
             )}
@@ -93,7 +108,7 @@ export default function MovieDetail() {
 
       <div className="venues-section">
         <h2>
-          <span className="section-icon">📍</span>
+          <MapPin className="section-icon" color="var(--accent)" />
           Select Venue & Showtime
         </h2>
         <div className="venues-list">
@@ -102,7 +117,7 @@ export default function MovieDetail() {
               <div className="venue-info">
                 <h3>{venue.name}</h3>
                 <p className="location">
-                  <span>📍</span> {venue.location}
+                  <MapPin size={14} /> {venue.location}
                 </p>
                 {venue.movie_name && (
                   <p className="movie-name">{venue.movie_name}</p>

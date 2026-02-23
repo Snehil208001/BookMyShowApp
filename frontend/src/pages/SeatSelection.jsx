@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
+import { ArrowLeft, Loader2, AlertCircle } from 'lucide-react'
 import { getSeatLayout, reserveSeats, bookSeats } from '../api'
 import { useAuth } from '../context/AuthContext'
 import './SeatSelection.css'
@@ -88,7 +89,7 @@ export default function SeatSelection() {
   if (loading) {
     return (
       <div className="seat-selection seat-selection-loading">
-        <div className="loading-spinner"></div>
+        <Loader2 className="loading-spinner" size={48} />
         <p>Loading seat layout...</p>
       </div>
     )
@@ -96,6 +97,7 @@ export default function SeatSelection() {
   if (error && !layout) {
     return (
       <div className="seat-selection seat-selection-error">
+        <AlertCircle size={48} color="#ef4444" style={{ marginBottom: '1rem' }} />
         <p>{error}</p>
         <button type="button" className="btn-primary" onClick={() => navigate(-1)}>Go Back</button>
       </div>
@@ -109,7 +111,7 @@ export default function SeatSelection() {
     <div className="seat-selection">
       <header className="seat-selection-header">
         <button type="button" className="back-btn" onClick={() => navigate(-1)}>
-          ← Back
+          <ArrowLeft size={16} /> Back
         </button>
         <div className="seat-selection-title">
           <h1>Select Your Seats</h1>

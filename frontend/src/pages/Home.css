@@ -3,8 +3,15 @@
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(12px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 /* Hero */
@@ -26,18 +33,18 @@
 .hero-gradient {
   position: absolute;
   inset: 0;
-  background: 
-    radial-gradient(ellipse 100% 80% at 50% -10%, rgba(229, 9, 20, 0.15) 0%, transparent 60%),
-    radial-gradient(ellipse 80% 60% at 80% 50%, rgba(245, 158, 11, 0.06) 0%, transparent 50%),
-    linear-gradient(180deg, rgba(18, 18, 26, 0.6) 0%, transparent 50%);
+  background:
+    radial-gradient(ellipse 100% 80% at 50% -10%, var(--accent-glow) 0%, transparent 60%),
+    radial-gradient(ellipse 80% 60% at 80% 50%, var(--gold-glow) 0%, transparent 50%),
+    linear-gradient(180deg, var(--bg-glass-heavy) 0%, var(--bg-dark) 100%);
 }
 
 .hero-pattern {
   position: absolute;
   inset: 0;
-  background-image: 
-    linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
   background-size: 40px 40px;
   opacity: 0.5;
 }
@@ -98,8 +105,9 @@
 
 .search-icon {
   padding: 1rem 1.25rem;
-  font-size: 1.1rem;
-  background: var(--bg-hover);
+  display: flex;
+  align-items: center;
+  background: transparent;
   color: var(--text-muted);
 }
 
@@ -131,6 +139,7 @@
 .search-btn:hover {
   background: linear-gradient(135deg, var(--accent-hover), var(--accent));
   box-shadow: 0 0 24px var(--accent-glow);
+  transform: scale(1.02);
 }
 
 /* Movies section */
@@ -164,13 +173,27 @@
 }
 
 /* Movie card */
+.tilt-wrapper {
+  border-radius: var(--radius-lg);
+  transform-style: preserve-3d;
+  width: 100%;
+  height: 100%;
+}
+
 .movie-card {
-  background: var(--bg-card);
+  background: var(--bg-glass);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
   border-radius: var(--radius-lg);
   overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
   transition: all var(--transition);
-  border: 1px solid var(--border);
+  border: 1px solid var(--glass-border);
   animation: cardFadeIn 0.5s ease backwards;
+  transform: translateZ(20px);
+  box-shadow: var(--shadow-3d);
 }
 
 @keyframes cardFadeIn {
@@ -178,6 +201,7 @@
     opacity: 0;
     transform: translateY(20px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -185,9 +209,8 @@
 }
 
 .movie-card:hover {
-  transform: translateY(-8px);
-  box-shadow: var(--shadow-hover);
-  border-color: var(--border-light);
+  box-shadow: var(--shadow-3d-hover);
+  border-color: rgba(255, 255, 255, 0.2);
 }
 
 .movie-poster {
@@ -256,8 +279,8 @@
 }
 
 .placeholder-icon {
-  font-size: 4rem;
   opacity: 0.5;
+  color: var(--text-muted);
 }
 
 .duration-badge {
@@ -282,6 +305,7 @@
   margin-bottom: 0.35rem;
   display: -webkit-box;
   -webkit-line-clamp: 2;
+  line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
   line-height: 1.4;
@@ -333,7 +357,9 @@
 }
 
 @keyframes spin {
-  to { transform: rotate(360deg); }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 .load-more {
